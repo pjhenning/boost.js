@@ -58,7 +58,7 @@ export class Draggable extends EventTarget {
         if (this.disabled) return;
         this.setPosition(startPosn!.x + posn.x - start.x,
                          startPosn!.y + posn.y - start.y);
-        this.trigger('drag', this.position);
+        this.trigger('drag', posn);
       },
       end: (last, start) => {
         if (this.disabled) return;
