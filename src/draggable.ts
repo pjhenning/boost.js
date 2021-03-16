@@ -33,6 +33,7 @@ interface DraggableOptions {
  */
 export class Draggable extends EventTarget {
   protected options: DraggableOptions;
+  protected areaBounds = {topLeft: new Point(0, 0), bottomRight: new Point(0, 0)};
   position = new Point(0, 0);
   disabled = false;
   width = 0;
@@ -84,6 +85,12 @@ export class Draggable extends EventTarget {
       this.width = this.options.width || $parent.width;
       this.height = this.options.height || $parent.height;
     }
+    const topLeft = new Point($parent.bounds.x - this.$el.bounds.x, $parent.bounds.y - this.$el.bounds.y);
+    const bottomRight = new Point(topLeft.x + this.width, topLeft.y + this.height);
+    this.areaBounds = {
+      topLeft,
+      bottomRight,
+    };
   }
 
   /** Sets the position of the element. */
@@ -91,7 +98,15 @@ export class Draggable extends EventTarget {
     const m = this.options.margin || 0;
 
     let p = new Point(this.options.moveX ? x : 0, this.options.moveY ? y : 0)
-        .clamp(new Bounds(0, this.width, 0, this.height), m)
+        .clamp(
+            new Bounds(
+                this.areaBounds.topLeft.x,
+                this.areaBounds.bottomRight.x,
+                this.areaBounds.topLeft.y,
+                this.areaBounds.bottomRight.y
+            ),
+            m
+        )
         .round(this.options.snap || 1);
 
     if (this.options.round) p = this.options.round(p);
