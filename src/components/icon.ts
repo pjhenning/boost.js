@@ -17,13 +17,15 @@ export class IconView extends CustomElementView {
     // a library like Vue.js.
     if (this.children.length) return;
 
-    const $svg = $N('svg', {viewBox: '0 0 24 24', alt: ''}, this);
+    const $svg = $N('svg', {viewBox: '0 0 24 24', alt: '', 'aria-hidden': true}, this);
     const $use = $N('use', {}, $svg);
 
     const size = +this.attr('size') || 24;
     for (const $el of [this, $svg]) $el.css({width: `${size}px`, height: `${size}px`});
 
     this.onAttr('name', (n) => $use.setAttr('href', `/icons.svg#${n}`));
+    this.onAttr('aria-label', () => $svg.removeAttr('aria-hidden'));
+    this.onAttr('aria-labelledby', () => $svg.removeAttr('aria-hidden'))
     // TODO ARIA attributes / alt text
     // TODO Maybe polyfill if <use> is not supported
   }
