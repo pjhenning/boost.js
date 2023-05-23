@@ -25,10 +25,15 @@ export class IconView extends CustomElementView {
 
     this.onAttr('name', (n) => $use.setAttr('href', `/icons.svg#${n}`));
     this.onAttr('aria-label', (v, initial) => {
-      console.log(`got value '${v}' for \`aria-hidden\`; is ${initial ? '' : 'not'} initial`);
-      $svg.removeAttr('aria-hidden');
+      if (v !== '' && v !== undefined && v !== null) {
+        $svg.removeAttr('aria-hidden');
+      }
     });
-    this.onAttr('aria-labelledby', () => $svg.removeAttr('aria-hidden'));
+    this.onAttr('aria-labelledby', (v, initial) => {
+      if (v !== '' && v !== undefined && v !== null) {
+        $svg.removeAttr('aria-hidden');
+      }
+    });
     // TODO ARIA attributes / alt text
     // TODO Maybe polyfill if <use> is not supported
   }
