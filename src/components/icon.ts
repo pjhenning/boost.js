@@ -15,9 +15,14 @@ export class IconView extends CustomElementView {
   ready() {
     // The element already has an SVG child, or is being copied at runtime by
     // a library like Vue.js.
+
+    if (!this.hasAttr('aria-label') && !this.hasAttr('aria-labelledby')) {
+      this.setAttr('aria-hidden', true);
+    }
+
     if (this.children.length) return;
 
-    const $svg = $N('svg', {viewBox: '0 0 24 24', alt: '', 'aria-hidden': true}, this);
+    const $svg = $N('svg', {viewBox: '0 0 24 24', alt: ''}, this);
     const $use = $N('use', {}, $svg);
 
     const size = +this.attr('size') || 24;
@@ -26,12 +31,12 @@ export class IconView extends CustomElementView {
     this.onAttr('name', (n) => $use.setAttr('href', `/icons.svg#${n}`));
     this.onAttr('aria-label', (v, initial) => {
       if (v !== '' && v !== undefined && v !== null) {
-        $svg.removeAttr('aria-hidden');
+        this.removeAttr('aria-hidden');
       }
     });
     this.onAttr('aria-labelledby', (v, initial) => {
       if (v !== '' && v !== undefined && v !== null) {
-        $svg.removeAttr('aria-hidden');
+        this.removeAttr('aria-hidden');
       }
     });
     // TODO ARIA attributes / alt text
